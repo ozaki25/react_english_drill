@@ -1,7 +1,12 @@
-this.Drill = React.createClass({
+this.EnglishDrill = React.createClass({
   render: function() {
     return(
-<NavigationBar />
+<body>
+  <NavigationBar />
+  <div className="container">
+    <Drill />
+  </div>
+</body>
     )
   }
 });
@@ -26,6 +31,33 @@ this.NavigationBar = React.createClass({
         </li>
       </ul>
     </div>
+  </div>
+</div>
+    )
+  }
+});
+
+this.Drill = React.createClass({
+  render: function() {
+    return(
+<div className="panel panel-primary">
+  <div className="panel-heading">問題</div>
+  <div className="panel-body">
+    <form className="form-horizontal">
+      <div className="form-group">
+        <label className="control-label col-sm-2">日本語：</label>
+        <div className="col-sm-10 question-japanese-sentense">これはペンです</div>
+      </div>
+      <div className="form-group">
+        <label className="control-label col-sm-2">English：</label>
+        <div className="col-sm-10">
+          <input className="form-control" type="text" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div className="panel-footer">
+    <a href="#" className="btn btn-primary">送信</a>
   </div>
 </div>
     )
