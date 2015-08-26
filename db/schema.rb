@@ -13,14 +13,11 @@
 
 ActiveRecord::Schema.define(version: 20150803124642) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "drills", force: :cascade do |t|
-    t.string   "japanese"
-    t.string   "english"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "japanese",   limit: 255
+    t.string   "english",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
 end

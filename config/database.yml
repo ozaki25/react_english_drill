@@ -1,23 +1,23 @@
 development:
-  adapter: postgresql
-  encoding: utf-8
+  adapter: mysql2
+  encoding: utf8
   database: english_drill_react_development
   pool: 5
-  username: ozaki
+  username: root
   password:
 
 test:
-  adapter: postgresql
-  encoding: utf-8
+  adapter: mysql2
+  encoding: utf8
   database: english_drill_react_test
   pool: 5
-  username: ozaki
+  username: root
   password:
 
 production:
-  adapter: postgresql
-  encoding: utf-8
+  adapter: mysql2
+  encoding: utf8
   database: english_drill_react_production
   pool: 5
-  username: ozaki
+  username: root
   password:

@@ -2,8 +2,10 @@ this.EnglishDrill = React.createClass({
   render: function() {
     return(
 <body>
-  <NavigationBar />
   <div className="container">
+    <span className="title">
+      <a href="/">English Dril</a>
+    </span>
     <Drill />
   </div>
 </body>
@@ -11,53 +13,28 @@ this.EnglishDrill = React.createClass({
   }
 });
 
-this.NavigationBar = React.createClass({
-  render: function() {
-    return(
-<div className="navbar navbar-default navbar-fixed-top">
-  <div className="container">
-    <div className="navbar-header">
-      <button className="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button">
-        <span className='icon-bar'></span>
-        <span className='icon-bar'></span>
-        <span className='icon-bar'></span>
-      </button>
-      <a className="navbar-brand" href="/">React English Drill</a>
-    </div>
-    <div className='collapse navbar-collapse'>
-      <ul className='nav navbar-nav navbar-right'>
-        <li>
-          <li><a href="#">テストユーザ</a></li>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-    )
-  }
-});
-
 this.Drill = React.createClass({
   render: function() {
     return(
-<div className="panel panel-primary">
-  <div className="panel-heading">問題</div>
-  <div className="panel-body">
-    <form className="form-horizontal">
-      <div className="form-group">
-        <label className="control-label col-sm-2">日本語：</label>
-        <div className="col-sm-10 question-japanese-sentense">これはペンです</div>
-      </div>
-      <div className="form-group">
-        <label className="control-label col-sm-2">English：</label>
-        <div className="col-sm-10">
-          <input className="form-control" type="text" />
-        </div>
-      </div>
-    </form>
+<div className="row">
+  <div className="col-md-6">
+    <h2>SECTION 17</h2>
+    <span className="number">No.86</span>
   </div>
-  <div className="panel-footer">
-    <a href="#" className="btn btn-primary">送信</a>
+  <div className="col-md-2 counter-block">
+    <div className="counter-text">You Answered</div>
+    <div className="counter-number">3</div>
+    <div className="counter-text">times.</div>
+  </div>
+  <div className="col-md-2 counter-block">
+    <div className="counter-text">You Cleared</div>
+    <div className="counter-number">0</div>
+    <div className="counter-text">times.</div>
+  </div>
+  <div className="col-md-2 counter-block lastfive">
+    <div className="counter-text">Last</div>
+    <div className="counter-number">5</div>
+    <div className="counter-text">to clear this section.</div>
   </div>
 </div>
     )
