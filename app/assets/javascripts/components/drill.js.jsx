@@ -1,5 +1,11 @@
 this.EnglishDrill = React.createClass({
+  getInitialState: function() {
+    return {
+      drill: this.props.drill
+    };
+  },
   render: function() {
+    console.log(this.state.drill);
     return(
 <body>
   <div className="container">
@@ -8,7 +14,7 @@ this.EnglishDrill = React.createClass({
     </span>
     <hr />
     <ProgressInfo />
-    <Drill />
+    <Drill drill={this.state.drill} />
   </div>
 </body>
     )
@@ -51,11 +57,12 @@ this.ProgressInfo = React.createClass({
 
 this.Drill = React.createClass({
   render: function() {
+    var japanese = this.props.drill.japanese
     return(
-<form action="#" method="post">
+<form action="/drills" method="post">
   <div className="sentence-block">
     <label>Japanese</label>
-    <div className="japanese">あなたの考えは理論上はすばらしそうだけれども、実際には機能しないと思います。</div>
+    <div className="japanese">{japanese}</div>
   </div>
   <div className="sentence-block form-group">
     <label>English</label>
