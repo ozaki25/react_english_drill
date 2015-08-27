@@ -5,6 +5,9 @@ this.EnglishDrill = React.createClass({
       action: this.props.action
     };
   },
+  setDrill: function(drill) {
+    this.setState({ drill: drill });
+  },
   setAction: function(action) {
     this.setState({ action: action });
   },
@@ -26,6 +29,21 @@ this.EnglishDrill = React.createClass({
       console.log("ajax done, action : " + _this.state.action);
     });
   },
+  toNextDrill: function() {
+    var _this = this;
+    var id = this.state.drill.id
+    var url = "/drills/" + id + "/next"
+    $.ajax({
+      url: url,
+      dataType: 'json',
+      type: 'POST',
+    }).done(function(data) {
+      _this.setDrill(data.drill);
+      _this.setAction(data.action);
+      console.log("ajax done, next id  : " + _this.state.drill.id);
+      console.log("ajax done, action : " + _this.state.action);
+    });
+  },
   render: function() {
     console.log(this.state.drill);
     return(
@@ -35,7 +53,7 @@ this.EnglishDrill = React.createClass({
     <hr />
     <ProgressInfo drill={this.state.drill} />
     <Japanese drill={this.state.drill} />
-    <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} />
+    <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} next={this.toNextDrill} />
   </div>
 </body>
     )
@@ -103,7 +121,7 @@ this.English = React.createClass({
   action: function() {
     switch (this.props.action) {
       case "question" : return <Question onAnswerSubmit={this.props.onAnswerSubmit} />;
-      case "correct" : return <Correct answer={this.props.answer} />;
+      case "correct" : return <Correct answer={this.props.answer} next={this.props.next} />;
       case "incorrect" : return <Incorrect drill={this.props.drill} answer={this.props.answer} onAnswerSubmit={this.props.onAnswerSubmit} />;
       default : return "Error"
     };
@@ -118,16 +136,17 @@ this.Question = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault()
     var answer = this.refs.answer.getDOMNode().value.trim()
+    if (!answer) return;
     console.log("answer : " + answer);
     this.props.onAnswerSubmit({answer: answer})
   },
   render: function() {
-    console.log("this action is Question");
+    console.log("action : Question");
     return(
-<form onSubmit={this.handleSubmit}>
+<form autocomplete="off" onSubmit={this.handleSubmit}>
   <div className="sentence-block form-group">
     <label>English</label>
-    <input type="text" name="answer" className="form-control" ref="answer" />
+    <input type="text" name="answer" className="form-control" defaultValue="" ref="answer" />
   </div>
   <input type="submit" value="SEND" className="btn btn-primary btn-large" />
 </form>
@@ -137,9 +156,19 @@ this.Question = React.createClass({
 
 this.Correct = React.createClass({
   render: function() {
-    console.log("this action is Correct");
+    console.log("action : Correct");
+    var answer = this.props.answer;
     return(
-<h1>toge</h1>
+<div>
+  <div className="sentence-block">
+    <label>English</label>
+    <div className="form-group has-success">
+      <label className="control-label">Correct!</label>
+      <div className="english-sentence help-block">{answer}</div>
+    </div>
+  </div>
+  <a className="btn btn-success btn-large" onClick={this.props.next}>NEXT</a>
+</div>
     );
   }
 });
@@ -148,16 +177,18 @@ this.Incorrect = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault();
     var answer = this.refs.answer.getDOMNode().value.trim();
+    if (!answer) return;
+    React.findDOMNode(this.refs.answer).value = "";
     console.log(answer);
     this.props.onAnswerSubmit({answer: answer})
   },
   render: function() {
-    console.log("this action is Incorrect");
+    console.log("action : Incorrect");
     var english = this.props.drill.english;
     var answer = this.props.answer;
     console.log("answer : " + answer);
     return(
-<form onSubmit={this.handleSubmit}>
+<form autoComplete="off" onSubmit={this.handleSubmit}>
   <div className="sentence-block">
     <label>English</label>
     <div className="form-group has-error">
@@ -168,7 +199,7 @@ this.Incorrect = React.createClass({
       <label className="control-label">Answer :</label>
       <div className="english-sentence help-block">{english}</div>
     </div>
-    <input type="text" name="answer" className="form-control" value="" ref="answer" />
+    <input type="text" name="answer" className="form-control" defaultValue="" ref="answer" />
   </div>
   <input type="submit" value="RETRY" className="btn btn-danger btn-large" />
 </form>

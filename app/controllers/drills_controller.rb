@@ -1,5 +1,5 @@
 class DrillsController < ApplicationController
-  before_action :set_drill, only: %i(show check)
+  before_action :set_drill, only: %i(show check next)
   before_action :answer_params, only: :check
 
   def show
@@ -13,12 +13,17 @@ class DrillsController < ApplicationController
               else
                 "incorrect"
               end
-    @drill = Drill.next @drill
-    puts "answer: #{@answer}"
-    puts @action.to_s
+    logger.info "answer: #{@answer}"
+    logger.info @action.to_s
     render json: {action: @action}
   end
 
+  def next
+    @drill = Drill.next @drill
+    @action = "question"
+    render json: {drill: @drill, action: @action}
+  end
+  
   private
   def answer_params
     @answer = params[:answer]
