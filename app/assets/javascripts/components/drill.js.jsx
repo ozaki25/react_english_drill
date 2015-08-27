@@ -143,7 +143,7 @@ this.Question = React.createClass({
   render: function() {
     console.log("action : Question");
     return(
-<form autocomplete="off" onSubmit={this.handleSubmit}>
+<form onSubmit={this.handleSubmit}>
   <div className="sentence-block form-group">
     <label>English</label>
     <input type="text" name="answer" className="form-control" defaultValue="" ref="answer" />
@@ -188,7 +188,7 @@ this.Incorrect = React.createClass({
     var answer = this.props.answer;
     console.log("answer : " + answer);
     return(
-<form autoComplete="off" onSubmit={this.handleSubmit}>
+<form onSubmit={this.handleSubmit}>
   <div className="sentence-block">
     <label>English</label>
     <div className="form-group has-error">

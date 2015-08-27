@@ -11,13 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150803124642) do
+ActiveRecord::Schema.define(version: 20150827230118) do
 
   create_table "drills", force: :cascade do |t|
     t.string   "japanese",   limit: 255
     t.string   "english",    limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.integer  "exeid",      limit: 4
+    t.integer  "section_no", limit: 4
   end
 
 end
