@@ -1,4 +1,10 @@
 this.EnglishDrill = React.createClass({
+  getInitialState: function() {
+    return {
+      drill: this.props.drill,
+      action: this.props.action
+    };
+  },
   handleAnswerSubmit: function(answer) {
     var id = this.props.drill.id
     var url = "/drills/" + id + "/check"
@@ -9,24 +15,37 @@ this.EnglishDrill = React.createClass({
       data: answer
     });
   },
-  getInitialState: function() {
-    return {
-      drill: this.props.drill
+  action: function() {
+    switch (this.props.action) {
+      case "question" : return <Question />;
+      case "correct" : return <Correct />;
+      case "inccorect" : return <Incorrect />;
+      default : return <Question />;
     };
   },
   render: function() {
     console.log(this.state.drill);
+    var action = this.action()
     return(
 <body>
   <div className="container">
-    <span className="title">
-      <a href="/">English Dril</a>
-    </span>
+    <Title />
     <hr />
     <ProgressInfo drill={this.state.drill} />
-    <AnswerForm drill={this.state.drill} onAnswerSubmit={this.handleAnswerSubmit} />
+    <Japanese drill={this.state.drill} />
+    <English drill={this.state.drill} onAnswerSubmit={this.handleAnswerSubmit} />
   </div>
 </body>
+    )
+  }
+});
+
+this.Title = React.createClass({
+  render: function() {
+    return(
+<span className="title">
+  <a href="/">English Dril</a>
+</span>
     )
   }
 });
@@ -66,7 +85,19 @@ this.ProgressInfo = React.createClass({
   }
 });
 
-this.AnswerForm = React.createClass({
+this.Japanese = React.createClass({
+  render: function() {
+    var japanese = this.props.drill.japanese
+    return(
+<div className="sentence-block">
+  <label>Japanese</label>
+  <div className="japanese">{japanese}</div>
+</div>
+    )
+  }
+});
+
+this.English = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault()
     var answer = this.refs.answer.getDOMNode().value.trim()
@@ -74,15 +105,8 @@ this.AnswerForm = React.createClass({
     this.props.onAnswerSubmit({answer: answer})
   },
   render: function() {
-    var id = this.props.drill.id
-    var japanese = this.props.drill.japanese
-    var action = "/drills/" + id + "/check"
     return(
-<form action={action} method="post" onSubmit={this.handleSubmit}>
-  <div className="sentence-block">
-    <label>Japanese</label>
-    <div className="japanese">{japanese}</div>
-  </div>
+<form onSubmit={this.handleSubmit}>
   <div className="sentence-block form-group">
     <label>English</label>
     <input type="text" name="answer" className="form-control" ref="answer" />
@@ -90,5 +114,23 @@ this.AnswerForm = React.createClass({
   <input type="submit" value="SEND" className="btn btn-primary btn-large" />
 </form>
     )
+  }
+});
+
+this.Question = React.createClass({
+  render: function() {
+    return;
+  }
+});
+
+this.Correnct = React.createClass({
+  render: function() {
+    return;
+  }
+});
+
+this.Incorrect = React.createClass({
+  render: function() {
+    return;
   }
 });
