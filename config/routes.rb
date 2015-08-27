@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
-  root 'drills#index'
-  resources :drill, only: :index
+  root 'drills#show'
+  resources :drills do
+    post 'check', to: 'drills#check'
+  end
 end

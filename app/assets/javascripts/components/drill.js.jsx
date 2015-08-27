@@ -13,7 +13,7 @@ this.EnglishDrill = React.createClass({
       <a href="/">English Dril</a>
     </span>
     <hr />
-    <ProgressInfo />
+    <ProgressInfo drill={this.state.drill} />
     <Drill drill={this.state.drill} />
   </div>
 </body>
@@ -23,11 +23,12 @@ this.EnglishDrill = React.createClass({
 
 this.ProgressInfo = React.createClass({
   render: function() {
+    var id = this.props.drill.id
     return(
 <div className="row">
   <div className="col-md-6">
     <h2>SECTION 17</h2>
-    <span className="number">No.86</span>
+    <span className="number">No.{id}</span>
   </div>
   <div className="col-md-2">
     <div className="counter-block">
@@ -57,16 +58,18 @@ this.ProgressInfo = React.createClass({
 
 this.Drill = React.createClass({
   render: function() {
+    var id = this.props.drill.id
     var japanese = this.props.drill.japanese
+    var action = "/drills/" + id + "/check"
     return(
-<form action="/drills" method="post">
+<form action={action} method="post">
   <div className="sentence-block">
     <label>Japanese</label>
     <div className="japanese">{japanese}</div>
   </div>
   <div className="sentence-block form-group">
     <label>English</label>
-    <input id="inTxi" type="text" name="input" className="form-control" />
+    <input type="text" name="answer" className="form-control" />
   </div>
   <input type="submit" value="SEND" className="btn btn-primary btn-large" />
 </form>
