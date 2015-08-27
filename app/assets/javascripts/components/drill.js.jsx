@@ -19,19 +19,11 @@ this.EnglishDrill = React.createClass({
       data: answer
     }).done(function(data) {
       _this.setAction(data.action);
+      console.log("done");
     });
-  },
-  action: function() {
-    switch (this.state.action) {
-      case "question" : return <Question />;
-      case "correct" : return <Correct />;
-      case "inccorect" : return <Incorrect />;
-      default : return <Question />;
-    };
   },
   render: function() {
     console.log(this.state.drill);
-    console.log(this.state.action);
     return(
 <body>
   <div className="container">
@@ -39,7 +31,7 @@ this.EnglishDrill = React.createClass({
     <hr />
     <ProgressInfo drill={this.state.drill} />
     <Japanese drill={this.state.drill} />
-    <English action={this.action()} drill={this.state.drill} onAnswerSubmit={this.handleAnswerSubmit} />
+    <English action={this.state.action} drill={this.state.drill} onAnswerSubmit={this.handleAnswerSubmit} />
   </div>
 </body>
     )
@@ -104,6 +96,23 @@ this.Japanese = React.createClass({
 });
 
 this.English = React.createClass({
+  action: function() {
+    switch (this.props.action) {
+      case "question" : return <Question onAnswerSubmit={this.props.onAnswerSubmit} />;
+      case "correct" : return <Correct />;
+      case "inccorect" : return <Incorrect />;
+      default : return <Question />;
+    };
+  },
+  render: function() {
+    var action = this.props.action;
+    console.log("action : " + action);
+    console.log(this.action());
+    return <div>{this.action()}</div>
+  }
+});
+
+this.Question = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault()
     var answer = this.refs.answer.getDOMNode().value.trim()
@@ -111,6 +120,7 @@ this.English = React.createClass({
     this.props.onAnswerSubmit({answer: answer})
   },
   render: function() {
+    console.log("Question");
     return(
 <form onSubmit={this.handleSubmit}>
   <div className="sentence-block form-group">
@@ -119,24 +129,40 @@ this.English = React.createClass({
   </div>
   <input type="submit" value="SEND" className="btn btn-primary btn-large" />
 </form>
-    )
+    );
   }
 });
 
-this.Question = React.createClass({
+this.Correct = React.createClass({
   render: function() {
-    return;
-  }
-});
-
-this.Correnct = React.createClass({
-  render: function() {
-    return;
+    console.log("Correct");
+    return(
+<h1>toge</h1>
+    );
   }
 });
 
 this.Incorrect = React.createClass({
   render: function() {
-    return;
+    console.log("Incorrect");
+    return(
+<form onSubmit={this.handleSubmit}>
+  <div className="sentence_block">
+    <label>English</label>
+    <div className="control-group error">
+      <label>You wrote :</label>
+      <div className="english_youwrote help-inline">a</div>
+    </div>
+    <div className="control-group success">
+      <label>Answer :</label>
+      <div className="english_youwrote help-inline">
+        We expected him to defeat his opponent, but he failed to live up to our expectations.
+      </div>
+    </div>
+    <input type="text" name="answer" className="form-control" ref="answer" />
+  </div>
+  <input type="submit" value="RETRY" className="btn btn-danger btn-large" />
+</form>
+    );
   }
 });

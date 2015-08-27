@@ -7,6 +7,7 @@ class DrillsController < ApplicationController
   end
 
   def check
+    puts "check"
     @action = if @drill.check @answer
                 "correct"
               else
