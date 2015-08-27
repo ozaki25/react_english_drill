@@ -15,6 +15,7 @@ class DrillsController < ApplicationController
               end
     @drill = Drill.next @drill
     puts "answer: #{@answer}"
+    puts @action.to_s
     render json: {action: @action}
   end
 

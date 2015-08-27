@@ -8,10 +8,14 @@ this.EnglishDrill = React.createClass({
   setAction: function(action) {
     this.setState({ action: action });
   },
+  setAnswer: function(answer) {
+    this.setState({ answer: answer });
+  },
   handleAnswerSubmit: function(answer) {
     var _this = this;
     var id = this.state.drill.id
     var url = "/drills/" + id + "/check"
+    this.setAnswer(answer);
     $.ajax({
       url: url,
       dataType: 'json',
@@ -19,7 +23,7 @@ this.EnglishDrill = React.createClass({
       data: answer
     }).done(function(data) {
       _this.setAction(data.action);
-      console.log("done");
+      console.log("ajax done, action : " + _this.state.action);
     });
   },
   render: function() {
@@ -31,7 +35,7 @@ this.EnglishDrill = React.createClass({
     <hr />
     <ProgressInfo drill={this.state.drill} />
     <Japanese drill={this.state.drill} />
-    <English action={this.state.action} drill={this.state.drill} onAnswerSubmit={this.handleAnswerSubmit} />
+    <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} />
   </div>
 </body>
     )
@@ -99,15 +103,13 @@ this.English = React.createClass({
   action: function() {
     switch (this.props.action) {
       case "question" : return <Question onAnswerSubmit={this.props.onAnswerSubmit} />;
-      case "correct" : return <Correct />;
-      case "inccorect" : return <Incorrect />;
-      default : return <Question />;
+      case "correct" : return <Correct answer={this.props.answer} />;
+      case "incorrect" : return <Incorrect drill={this.props.drill} answer={this.props.answer} onAnswerSubmit={this.props.onAnswerSubmit} />;
+      default : return "Error"
     };
   },
   render: function() {
-    var action = this.props.action;
-    console.log("action : " + action);
-    console.log(this.action());
+    console.log("current action : " + this.props.action);
     return <div>{this.action()}</div>
   }
 });
@@ -116,11 +118,11 @@ this.Question = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault()
     var answer = this.refs.answer.getDOMNode().value.trim()
-    console.log(answer);
+    console.log("answer : " + answer);
     this.props.onAnswerSubmit({answer: answer})
   },
   render: function() {
-    console.log("Question");
+    console.log("this action is Question");
     return(
 <form onSubmit={this.handleSubmit}>
   <div className="sentence-block form-group">
@@ -135,7 +137,7 @@ this.Question = React.createClass({
 
 this.Correct = React.createClass({
   render: function() {
-    console.log("Correct");
+    console.log("this action is Correct");
     return(
 <h1>toge</h1>
     );
@@ -143,23 +145,30 @@ this.Correct = React.createClass({
 });
 
 this.Incorrect = React.createClass({
+  handleSubmit: function (e) {
+    e.preventDefault();
+    var answer = this.refs.answer.getDOMNode().value.trim();
+    console.log(answer);
+    this.props.onAnswerSubmit({answer: answer})
+  },
   render: function() {
-    console.log("Incorrect");
+    console.log("this action is Incorrect");
+    var english = this.props.drill.english;
+    var answer = this.props.answer;
+    console.log("answer : " + answer);
     return(
 <form onSubmit={this.handleSubmit}>
-  <div className="sentence_block">
+  <div className="sentence-block">
     <label>English</label>
-    <div className="control-group error">
-      <label>You wrote :</label>
-      <div className="english_youwrote help-inline">a</div>
+    <div className="form-group has-error">
+      <label className="control-label">You wrote :</label>
+      <div className="english-sentence help-block">{answer}</div>
     </div>
-    <div className="control-group success">
-      <label>Answer :</label>
-      <div className="english_youwrote help-inline">
-        We expected him to defeat his opponent, but he failed to live up to our expectations.
-      </div>
+    <div className="has-success">
+      <label className="control-label">Answer :</label>
+      <div className="english-sentence help-block">{english}</div>
     </div>
-    <input type="text" name="answer" className="form-control" ref="answer" />
+    <input type="text" name="answer" className="form-control" value="" ref="answer" />
   </div>
   <input type="submit" value="RETRY" className="btn btn-danger btn-large" />
 </form>
