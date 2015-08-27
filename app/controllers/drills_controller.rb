@@ -3,12 +3,18 @@ class DrillsController < ApplicationController
   before_action :answer_params, only: :check
 
   def show
+    @action = "question"
   end
 
   def check
+    @action = if @drill.check @answer
+                "correct"
+              else
+                "incorrect"
+              end
     @drill = Drill.next @drill
     puts "answer: #{@answer}"
-    redirect_to @drill
+    render json: {action: @action}
   end
 
   private

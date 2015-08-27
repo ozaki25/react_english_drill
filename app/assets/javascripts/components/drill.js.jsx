@@ -5,18 +5,24 @@ this.EnglishDrill = React.createClass({
       action: this.props.action
     };
   },
+  setAction: function(action) {
+    this.setState({ action: action });
+  },
   handleAnswerSubmit: function(answer) {
-    var id = this.props.drill.id
+    var _this = this;
+    var id = this.state.drill.id
     var url = "/drills/" + id + "/check"
     $.ajax({
       url: url,
       dataType: 'json',
       type: 'POST',
       data: answer
+    }).done(function(data) {
+      _this.setAction(data.action);
     });
   },
   action: function() {
-    switch (this.props.action) {
+    switch (this.state.action) {
       case "question" : return <Question />;
       case "correct" : return <Correct />;
       case "inccorect" : return <Incorrect />;
@@ -25,7 +31,7 @@ this.EnglishDrill = React.createClass({
   },
   render: function() {
     console.log(this.state.drill);
-    var action = this.action()
+    console.log(this.state.action);
     return(
 <body>
   <div className="container">
@@ -33,7 +39,7 @@ this.EnglishDrill = React.createClass({
     <hr />
     <ProgressInfo drill={this.state.drill} />
     <Japanese drill={this.state.drill} />
-    <English drill={this.state.drill} onAnswerSubmit={this.handleAnswerSubmit} />
+    <English action={this.action()} drill={this.state.drill} onAnswerSubmit={this.handleAnswerSubmit} />
   </div>
 </body>
     )
