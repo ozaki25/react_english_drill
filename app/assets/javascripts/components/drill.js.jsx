@@ -16,7 +16,7 @@ this.EnglishDrill = React.createClass({
   },
   handleAnswerSubmit: function(answer) {
     var _this = this;
-    var id = this.state.drill.id
+    var id = this.state.drill.exeid
     var url = "/drills/" + id + "/check"
     this.setAnswer(answer);
     $.ajax({
@@ -31,7 +31,7 @@ this.EnglishDrill = React.createClass({
   },
   toNextDrill: function() {
     var _this = this;
-    var id = this.state.drill.id
+    var id = this.state.drill.exeid
     var url = "/drills/" + id + "/next"
     $.ajax({
       url: url,
@@ -40,7 +40,7 @@ this.EnglishDrill = React.createClass({
     }).done(function(data) {
       _this.setDrill(data.drill);
       _this.setAction(data.action);
-      console.log("ajax done, next id  : " + _this.state.drill.id);
+      console.log("ajax done, next id  : " + _this.state.drill.exeid);
       console.log("ajax done, action : " + _this.state.action);
     });
   },
@@ -53,7 +53,7 @@ this.EnglishDrill = React.createClass({
     <hr />
     <ProgressInfo drill={this.state.drill} />
     <Japanese drill={this.state.drill} />
-    <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} next={this.toNextDrill} />
+    <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} toNext={this.toNextDrill} />
   </div>
 </body>
     )
@@ -72,11 +72,12 @@ this.Title = React.createClass({
 
 this.ProgressInfo = React.createClass({
   render: function() {
-    var id = this.props.drill.id
+    var id = this.props.drill.exeid
+    var sectionNo = this.props.drill.section_no
     return(
 <div className="row">
   <div className="col-md-6">
-    <h2>SECTION 17</h2>
+    <h2>SECTION {sectionNo}</h2>
     <span className="number">No.{id}</span>
   </div>
   <div className="col-md-2">
@@ -107,7 +108,7 @@ this.ProgressInfo = React.createClass({
 
 this.Japanese = React.createClass({
   render: function() {
-    var japanese = this.props.drill.japanese
+    var japanese = this.props.drill.japanese;
     return(
 <div className="sentence-block">
   <label>Japanese</label>
@@ -121,7 +122,7 @@ this.English = React.createClass({
   action: function() {
     switch (this.props.action) {
       case "question" : return <Question onAnswerSubmit={this.props.onAnswerSubmit} />;
-      case "correct" : return <Correct answer={this.props.answer} next={this.props.next} />;
+      case "correct" : return <Correct answer={this.props.answer} toNext={this.props.toNext} />;
       case "incorrect" : return <Incorrect drill={this.props.drill} answer={this.props.answer} onAnswerSubmit={this.props.onAnswerSubmit} />;
       default : return "Error"
     };
@@ -167,7 +168,7 @@ this.Correct = React.createClass({
       <div className="english-sentence help-block">{answer}</div>
     </div>
   </div>
-  <a className="btn btn-success btn-large" onClick={this.props.next}>NEXT</a>
+  <a className="btn btn-success btn-large" onClick={this.props.toNext}>NEXT</a>
 </div>
     );
   }

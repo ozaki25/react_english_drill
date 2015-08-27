@@ -14,7 +14,7 @@ class DrillsController < ApplicationController
                 "incorrect"
               end
     logger.info "answer: #{@answer}"
-    logger.info @action.to_s
+    logger.info "result : #{@action.to_s}"
     render json: {action: @action}
   end
 
@@ -31,6 +31,6 @@ class DrillsController < ApplicationController
 
   def set_drill
     id = params[:id] ||= params[:drill_id]
-    @drill = Drill.find(id)
+    @drill = Drill.where(exeid: id).first
   end
 end

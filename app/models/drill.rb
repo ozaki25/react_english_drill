@@ -1,6 +1,6 @@
 class Drill < ActiveRecord::Base
-  scope :next, lambda{ |id|
-    where("id > ?", id).order("id").first
+  scope :next, lambda{ |drill|
+    where("exeid > ?", drill.exeid).order("exeid").first
   }
 
   def check(answer)
