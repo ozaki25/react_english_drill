@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828021545) do
+ActiveRecord::Schema.define(version: 20150828074427) do
 
   create_table "drills", force: :cascade do |t|
     t.string   "japanese",   limit: 255
@@ -21,6 +21,18 @@ ActiveRecord::Schema.define(version: 20150828021545) do
     t.integer  "exeid",      limit: 4
     t.integer  "section_no", limit: 4
   end
+
+  create_table "progresses", force: :cascade do |t|
+    t.integer  "drill_id",   limit: 4
+    t.integer  "user_id",    limit: 4
+    t.boolean  "clear",      limit: 1
+    t.integer  "count",      limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "progresses", ["drill_id"], name: "index_progresses_on_drill_id", using: :btree
+  add_index "progresses", ["user_id"], name: "index_progresses_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
@@ -40,4 +52,6 @@ ActiveRecord::Schema.define(version: 20150828021545) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "progresses", "drills"
+  add_foreign_key "progresses", "users"
 end
