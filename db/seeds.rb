@@ -6,6 +6,8 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+User.create(email: "ozaki@oz.jp", password: "ozaki")
+
 Drill.create(exeid: 0, section_no: 0, japanese: "これはペンです。", english: "This is a pen.")
 Drill.create(exeid: 1, section_no: 0, japanese: "個人の意思は尊重しなければならない。", english: "We must respect the will of the individual.")
 Drill.create(exeid: 2, section_no: 0, japanese: "気楽にいけよ。大丈夫、すべてうまくいくさ。", english: "Take it easy. I can assure you that everything will turn out fine.")

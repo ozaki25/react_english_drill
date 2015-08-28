@@ -1,4 +1,5 @@
 class DrillsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_drill, only: %i(show check next)
   before_action :answer_params, only: :check
 
@@ -30,7 +31,7 @@ class DrillsController < ApplicationController
   end
 
   def set_drill
-    id = params[:id] ||= params[:drill_id]
+    id = params[:id] ||= params[:drill_id] ||= 0
     @drill = Drill.where(exeid: id).first
   end
 end

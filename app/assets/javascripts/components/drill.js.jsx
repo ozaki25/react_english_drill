@@ -49,6 +49,7 @@ this.EnglishDrill = React.createClass({
     return(
 <body>
   <div className="container">
+    <Header />
     <Title />
     <hr />
     <ProgressInfo drill={this.state.drill} />
@@ -56,6 +57,19 @@ this.EnglishDrill = React.createClass({
     <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} toNext={this.toNextDrill} />
   </div>
 </body>
+    )
+  }
+});
+
+this.Header = React.createClass({
+  render: function() {
+    //var email = this.props.user.email
+    return(
+<div className="listlink">
+  <a href="#">ozaki</a>
+  |
+  <a href="/users/sign_out" data-method="delete" >logout</a>
+</div>
     )
   }
 });
@@ -83,21 +97,21 @@ this.ProgressInfo = React.createClass({
   <div className="col-md-2">
     <div className="counter-block">
       <div className="counter-text">You Answered</div>
-      <div className="counter-number">3</div>
+      <div className="counter-number">1</div>
       <div className="counter-text">times.</div>
     </div>
   </div>
   <div className="col-md-2">
     <div className="counter-block">
       <div className="counter-text">You Cleared</div>
-      <div className="counter-number">0</div>
+      <div className="counter-number">2</div>
       <div className="counter-text">times.</div>
     </div>
   </div>
   <div className="col-md-2">
     <div className="counter-block lastfive">
       <div className="counter-text">Last</div>
-      <div className="counter-number">5</div>
+      <div className="counter-number">3</div>
       <div className="counter-text">to clear this section.</div>
     </div>
   </div>
