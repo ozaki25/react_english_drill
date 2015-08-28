@@ -15,8 +15,8 @@ test:
   password:
 
 production:
-  adapter: mysql2
-  encoding: utf8
+  adapter: pg
+  encoding: utf-8
   database: english_drill_react_production
   pool: 5
   username: root
