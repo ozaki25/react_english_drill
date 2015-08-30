@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828074427) do
+ActiveRecord::Schema.define(version: 20150829124709) do
 
   create_table "drills", force: :cascade do |t|
     t.string   "japanese",   limit: 255
@@ -25,10 +25,10 @@ ActiveRecord::Schema.define(version: 20150828074427) do
   create_table "progresses", force: :cascade do |t|
     t.integer  "drill_id",   limit: 4
     t.integer  "user_id",    limit: 4
-    t.boolean  "clear",      limit: 1
-    t.integer  "count",      limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.integer  "count",      limit: 4, default: 0
+    t.boolean  "clear",      limit: 1, default: false, null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
   end
 
   add_index "progresses", ["drill_id"], name: "index_progresses_on_drill_id", using: :btree
