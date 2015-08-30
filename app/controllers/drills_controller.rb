@@ -8,15 +8,15 @@ class DrillsController < ApplicationController
   end
 
   def check
-    puts "check"
-    @action = if @drill.check @answer
-                "correct"
-              else
-                "incorrect"
-              end
+    if @progress =current_user.progresses.find_by(drill: @drill)
+      @progress.count += 1
+    else
+      @progress = current_user.progresses.create(drill: @drill)
+    end
+    @action = @drill.check(@answer) ? "correct" : "incorrect"
     logger.info "answer: #{@answer}"
     logger.info "result : #{@action.to_s}"
-    render json: {action: @action}
+    render json: {progress: @progress, action: @action}
   end
 
   def next
@@ -32,6 +32,6 @@ class DrillsController < ApplicationController
 
   def set_drill
     id = params[:id] ||= params[:drill_id] ||= 0
-    @drill = Drill.where(exeid: id).first
+    @drill = Drill.find_by(exeid: id)
   end
 end
