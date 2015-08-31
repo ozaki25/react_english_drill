@@ -27,7 +27,7 @@ this.EnglishDrill = React.createClass({
       url: url,
       dataType: 'json',
       type: 'POST',
-      data: answer
+      data: {answer: answer, current_action: this.state.action}
     }).done(function(data) {
       _this.setAction(data.action);
       _this.setProgress(data.progress);
