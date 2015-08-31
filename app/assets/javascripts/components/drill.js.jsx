@@ -2,11 +2,15 @@ this.EnglishDrill = React.createClass({
   getInitialState: function() {
     return {
       drill: this.props.drill,
+      progress: this.props.progress,
       action: this.props.action
     };
   },
   setDrill: function(drill) {
     this.setState({ drill: drill });
+  },
+  setProgress: function(progress) {
+    this.setState({ progress: progress });
   },
   setAction: function(action) {
     this.setState({ action: action });
@@ -26,6 +30,7 @@ this.EnglishDrill = React.createClass({
       data: answer
     }).done(function(data) {
       _this.setAction(data.action);
+      _this.setProgress(data.progress);
       console.log("ajax done, action : " + _this.state.action);
     });
   },
@@ -46,13 +51,14 @@ this.EnglishDrill = React.createClass({
   },
   render: function() {
     console.log(this.state.drill);
+    console.log(this.state.progress);
     return(
 <body>
   <div className="container">
     <Header />
     <Title />
     <hr />
-    <ProgressInfo drill={this.state.drill} />
+    <ProgressInfo drill={this.state.drill} progress={this.state.progress}/>
     <Japanese drill={this.state.drill} />
     <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} toNext={this.toNextDrill} />
   </div>
@@ -86,8 +92,10 @@ this.Title = React.createClass({
 
 this.ProgressInfo = React.createClass({
   render: function() {
-    var id = this.props.drill.exeid
-    var sectionNo = this.props.drill.section_no
+    var id = this.props.drill.exeid;
+    var sectionNo = this.props.drill.section_no;
+    var count = this.props.progress.count;
+    var clear = this.props.progress.clear;
     return(
 <div className="row">
   <div className="col-md-6">
@@ -97,14 +105,14 @@ this.ProgressInfo = React.createClass({
   <div className="col-md-2">
     <div className="counter-block">
       <div className="counter-text">You Answered</div>
-      <div className="counter-number">1</div>
+      <div className="counter-number">{count}</div>
       <div className="counter-text">times.</div>
     </div>
   </div>
   <div className="col-md-2">
     <div className="counter-block">
       <div className="counter-text">You Cleared</div>
-      <div className="counter-number">2</div>
+      <div className="counter-number">{clear ? 1 : 0}</div>
       <div className="counter-text">times.</div>
     </div>
   </div>

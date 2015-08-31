@@ -1,6 +1,8 @@
 class DrillsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_drill, only: %i(show check next)
+  before_action :set_progress, only: %i(show check)
+  before_action :add_answer_count, only: :check
   before_action :answer_params, only: :check
 
   def show
@@ -8,11 +10,6 @@ class DrillsController < ApplicationController
   end
 
   def check
-    if @progress =current_user.progresses.find_by(drill: @drill)
-      @progress.count += 1
-    else
-      @progress = current_user.progresses.create(drill: @drill)
-    end
     @action = @drill.check(@answer) ? "correct" : "incorrect"
     logger.info "answer: #{@answer}"
     logger.info "result : #{@action.to_s}"
@@ -33,5 +30,16 @@ class DrillsController < ApplicationController
   def set_drill
     id = params[:id] ||= params[:drill_id] ||= 0
     @drill = Drill.find_by(exeid: id)
+  end
+
+  def set_progress
+    unless @progress = current_user.progresses.find_by(drill: @drill)
+      current_user.progresses.create(drill: @drill)
+    end
+
+    def add_answer_count
+      @progress.count += 1
+      @progress.save
+    end
   end
 end
