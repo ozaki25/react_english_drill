@@ -11,10 +11,9 @@ class DrillsController < ApplicationController
   end
 
   def check
-    puts @answer
     if @drill.check(@answer)
       @action = "correct"
-      @progress.clear = true
+      @progress.clearCount += 1
       @progress.save
     else
       @action = "incorrect"
@@ -53,7 +52,7 @@ class DrillsController < ApplicationController
   def add_answer_count
     logger.info "current_action : #{@current_action}"
     if @current_action == "question"
-      @progress.count += 1
+      @progress.answer_count += 1
       @progress.save
     end
   end

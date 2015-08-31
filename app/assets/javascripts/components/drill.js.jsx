@@ -95,8 +95,8 @@ this.ProgressInfo = React.createClass({
   render: function() {
     var id = this.props.drill.exeid;
     var sectionNo = this.props.drill.section_no;
-    var count = this.props.progress.count;
-    var clear = this.props.progress.clear;
+    var answerCount = this.props.progress.answer_count;
+    var clearCount = this.props.progress.clear_count;
     return(
 <div className="row">
   <div className="col-md-6">
@@ -106,14 +106,14 @@ this.ProgressInfo = React.createClass({
   <div className="col-md-2">
     <div className="counter-block">
       <div className="counter-text">You Answered</div>
-      <div className="counter-number">{count}</div>
+      <div className="counter-number">{answerCount}</div>
       <div className="counter-text">times.</div>
     </div>
   </div>
   <div className="col-md-2">
     <div className="counter-block">
       <div className="counter-text">You Cleared</div>
-      <div className="counter-number">{clear ? 1 : 0}</div>
+      <div className="counter-number">{clearCount}</div>
       <div className="counter-text">times.</div>
     </div>
   </div>
