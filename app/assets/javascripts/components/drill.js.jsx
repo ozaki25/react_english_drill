@@ -18,19 +18,20 @@ this.EnglishDrill = React.createClass({
   setAnswer: function(answer) {
     this.setState({ answer: answer });
   },
-  handleAnswerSubmit: function(answer) {
+  handleAnswerSubmit: function(value) {
     var _this = this;
     var id = this.state.drill.exeid
     var url = "/drills/" + id + "/check"
-    this.setAnswer(answer);
+    var answer = value.answer
     $.ajax({
       url: url,
       dataType: 'json',
       type: 'POST',
-      data: {answer: answer, current_action: this.state.action}
+      data: { answer: answer, current_action: this.state.action }
     }).done(function(data) {
       _this.setAction(data.action);
       _this.setProgress(data.progress);
+      _this.setAnswer(answer);
       console.log("ajax done, action : " + _this.state.action);
     });
   },
@@ -160,8 +161,8 @@ this.Question = React.createClass({
     e.preventDefault()
     var answer = this.refs.answer.getDOMNode().value.trim()
     if (!answer) return;
-    console.log("answer : " + answer);
-    this.props.onAnswerSubmit({answer: answer})
+    console.log(answer);
+    this.props.onAnswerSubmit({answer})
   },
   render: function() {
     console.log("action : Question");
@@ -201,9 +202,9 @@ this.Incorrect = React.createClass({
     e.preventDefault();
     var answer = this.refs.answer.getDOMNode().value.trim();
     if (!answer) return;
-    React.findDOMNode(this.refs.answer).value = "";
     console.log(answer);
-    this.props.onAnswerSubmit({answer: answer})
+    React.findDOMNode(this.refs.answer).value = "";
+    this.props.onAnswerSubmit({answer})
   },
   render: function() {
     console.log("action : Incorrect");
