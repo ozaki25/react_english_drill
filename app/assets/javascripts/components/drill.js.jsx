@@ -6,18 +6,6 @@ this.EnglishDrill = React.createClass({
       action: this.props.action
     };
   },
-  setDrill: function(drill) {
-    this.setState({ drill: drill });
-  },
-  setProgress: function(progress) {
-    this.setState({ progress: progress });
-  },
-  setAction: function(action) {
-    this.setState({ action: action });
-  },
-  setAnswer: function(answer) {
-    this.setState({ answer: answer });
-  },
   handleAnswerSubmit: function(value) {
     var _this = this;
     var id = this.state.drill.exeid
@@ -29,9 +17,7 @@ this.EnglishDrill = React.createClass({
       type: 'POST',
       data: { answer: answer, current_action: this.state.action }
     }).done(function(data) {
-      _this.setAction(data.action);
-      _this.setProgress(data.progress);
-      _this.setAnswer(answer);
+      _this.setState({ progress: data.progress, action: data.action, answer: answer });
       console.log("ajax done, action : " + _this.state.action);
     });
   },
@@ -44,9 +30,7 @@ this.EnglishDrill = React.createClass({
       dataType: 'json',
       type: 'POST',
     }).done(function(data) {
-      _this.setDrill(data.drill);
-      _this.setProgress(data.progress);
-      _this.setAction(data.action);
+      _this.setState({ drill: data.drill, progress: data.progress, action: data.action });
       console.log("ajax done, next id  : " + _this.state.drill.exeid);
       console.log("ajax done, action : " + _this.state.action);
       console.log(_this.state.progress);
