@@ -45,9 +45,11 @@ this.EnglishDrill = React.createClass({
       type: 'POST',
     }).done(function(data) {
       _this.setDrill(data.drill);
+      _this.setProgress(data.progress);
       _this.setAction(data.action);
       console.log("ajax done, next id  : " + _this.state.drill.exeid);
       console.log("ajax done, action : " + _this.state.action);
+      console.log(_this.state.progress);
     });
   },
   render: function() {

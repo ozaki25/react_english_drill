@@ -13,7 +13,7 @@ class DrillsController < ApplicationController
   def check
     if @drill.check(@answer)
       @action = "correct"
-      @progress.clearCount += 1
+      @progress.clear_count += 1
       @progress.save
     else
       @action = "incorrect"
@@ -25,8 +25,9 @@ class DrillsController < ApplicationController
 
   def next
     @drill = Drill.next @drill
+    set_progress
     @action = "question"
-    render json: {drill: @drill, action: @action}
+    render json: {drill: @drill, progress: @progress, action: @action}
   end
   
   private
