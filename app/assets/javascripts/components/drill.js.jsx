@@ -3,7 +3,8 @@ this.EnglishDrill = React.createClass({
     return {
       drill: this.props.drill,
       progress: this.props.progress,
-      action: this.props.action
+      action: this.props.action,
+      user: this.props.user
     };
   },
   handleAnswerSubmit: function(value) {
@@ -28,12 +29,11 @@ this.EnglishDrill = React.createClass({
     $.ajax({
       url: url,
       dataType: 'json',
-      type: 'POST',
+      type: 'GET',
     }).done(function(data) {
       _this.setState({ drill: data.drill, progress: data.progress, action: data.action });
       console.log("ajax done, next id  : " + _this.state.drill.exeid);
       console.log("ajax done, action : " + _this.state.action);
-      console.log(_this.state.progress);
     });
   },
   render: function() {
@@ -42,10 +42,10 @@ this.EnglishDrill = React.createClass({
     return(
 <body>
   <div className="container">
-    <Header />
+    <Header user={this.state.user} />
     <Title />
     <hr />
-    <ProgressInfo drill={this.state.drill} progress={this.state.progress}/>
+    <ProgressInfo drill={this.state.drill} progress={this.state.progress} />
     <Japanese drill={this.state.drill} />
     <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} toNext={this.toNextDrill} />
   </div>
@@ -56,11 +56,11 @@ this.EnglishDrill = React.createClass({
 
 this.Header = React.createClass({
   render: function() {
-    //var email = this.props.user.email
+    var email = this.props.user.email
     return(
 <div className="listlink">
-  <a href="#">ozaki</a>
-  |
+  <a href="#">{email}</a>
+  ｜
   <a href="/users/sign_out" data-method="delete" >logout</a>
 </div>
     )
@@ -146,7 +146,7 @@ this.Question = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault()
     var answer = this.refs.answer.getDOMNode().value.trim()
-    if (!answer) return;
+    if(!answer) return;
     console.log(answer);
     this.props.onAnswerSubmit({answer})
   },
@@ -187,7 +187,7 @@ this.Incorrect = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault();
     var answer = this.refs.answer.getDOMNode().value.trim();
-    if (!answer) return;
+    if(!answer) return;
     console.log(answer);
     React.findDOMNode(this.refs.answer).value = "";
     this.props.onAnswerSubmit({answer})
