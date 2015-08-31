@@ -46,7 +46,7 @@ class DrillsController < ApplicationController
 
   def set_progress
     unless @progress = current_user.progresses.find_by(drill: @drill)
-      current_user.progresses.create(drill: @drill)
+      @progress = current_user.progresses.create(drill: @drill)
     end
   end
 
