@@ -24,10 +24,11 @@ class DrillsController < ApplicationController
   end
 
   def next
-    @drill = Drill.next @drill
-    set_progress
+    current_drills = Drill.current_section_drills(current_user.current_section).not_clear
+    @next_drill = current_drills.next(@drill).class == Drill ? current_drills.next(@drill) : current_drills.first
+    @progress = current_user.progresses.find_by(drill: @next_drill)
     @action = "question"
-    render json: {drill: @drill, progress: @progress, action: @action}
+    render json: {drill: @next_drill, progress: @progress, action: @action}
   end
   
   private
@@ -45,9 +46,12 @@ class DrillsController < ApplicationController
   end
 
   def set_progress
-    unless @progress = current_user.progresses.find_by(drill: @drill)
-      @progress = current_user.progresses.create(drill: @drill)
+    if Drill.current_section_drills(current_user.current_section).select(&:progresses).count == 0
+      Drill.current_section_drills(current_user.current_section).each do |drill|
+        current_user.progresses.create(drill: drill)
+      end
     end
+    @progress = current_user.progresses.find_by(drill: @drill)
   end
 
   def add_answer_count
