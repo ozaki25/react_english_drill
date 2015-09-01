@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150901051352) do
+ActiveRecord::Schema.define(version: 20150901052651) do
 
   create_table "current_sections", force: :cascade do |t|
     t.integer  "drill_id",   limit: 4
@@ -34,12 +34,13 @@ ActiveRecord::Schema.define(version: 20150901051352) do
   end
 
   create_table "progresses", force: :cascade do |t|
-    t.integer  "drill_id",     limit: 4
-    t.integer  "user_id",      limit: 4
-    t.integer  "answer_count", limit: 4, default: 0
-    t.integer  "clear_count",  limit: 4, default: 0, null: false
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.integer  "drill_id",               limit: 4
+    t.integer  "user_id",                limit: 4
+    t.integer  "answer_count",           limit: 4, default: 0
+    t.integer  "clear_count",            limit: 4, default: 0,     null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.boolean  "current_section_result", limit: 1, default: false, null: false
   end
 
   add_index "progresses", ["drill_id"], name: "index_progresses_on_drill_id", using: :btree
