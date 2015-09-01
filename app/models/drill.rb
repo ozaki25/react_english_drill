@@ -1,6 +1,6 @@
 class Drill < ActiveRecord::Base
   has_many :progresses
-  scope :next, lambda{ |drill|
+  scope :next, -> drill {
     where("exeid > ?", drill.exeid).order("exeid").first
   }
 
