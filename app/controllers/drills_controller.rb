@@ -14,6 +14,7 @@ class DrillsController < ApplicationController
     if @drill.check(@answer)
       @action = "correct"
       @progress.clear_count += 1
+      @progress.current_section_result = true
       @progress.save
     else
       @action = "incorrect"
@@ -24,11 +25,21 @@ class DrillsController < ApplicationController
   end
 
   def next
-    current_drills = Drill.current_section_drills(current_user.current_section).not_clear
-    @next_drill = current_drills.next(@drill).class == Drill ? current_drills.next(@drill) : current_drills.first
-    @progress = current_user.progresses.find_by(drill: @next_drill)
+    current_drill = Drill.current_section_drills(current_user.current_section).not_clear
+    if current_drill.empty?
+      current_user.current_section += 1
+      current_user.save
+      current_user.progresses.joins(:drill).where('drills.section_no = ?', current_user.current_section).each do |progress|
+        progress.current_section_result = false
+        progress.save
+      end
+      @drill = Drill.find_by(section_no: current_user.current_section)
+    else
+      @drill = current_drills.next(@drill).class == Drill ? current_drills.next(@drill) : current_drills.first
+    end
+    set_progress
     @action = "question"
-    render json: {drill: @next_drill, progress: @progress, action: @action}
+    render json: {drill: @drill, progress: @progress, action: @action}
   end
   
   private
@@ -46,7 +57,10 @@ class DrillsController < ApplicationController
   end
 
   def set_progress
+    puts "count : #{Drill.current_section_drills(current_user.current_section).select(&:progresses).count}"
     if Drill.current_section_drills(current_user.current_section).select(&:progresses).count == 0
+      puts "^^^^^^^^^^^^"
+      puts "current : #{current_user.current_section}"
       Drill.current_section_drills(current_user.current_section).each do |drill|
         current_user.progresses.create(drill: drill)
       end
