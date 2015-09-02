@@ -13,9 +13,11 @@ class DrillsController < ApplicationController
   def check
     if @drill.check(@answer)
       @action = "correct"
-      @progress.clear_count += 1
-      @progress.current_section_result = true
-      @progress.save
+      if @current_action == 'question'
+        @progress.clear_count += 1
+        @progress.current_section_result = true
+        @progress.save
+      end
     else
       @action = "incorrect"
     end
