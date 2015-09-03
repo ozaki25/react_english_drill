@@ -28,7 +28,7 @@ class DrillsController < ApplicationController
 
   def next
     if current_user.progresses.joins(:drill).where('drills.section_no = ?', current_user.current_section).where(current_section_result: false).empty?
-      ligger.info 'section clear'
+      logger.info 'section clear'
       current_user.progresses.update_all(current_section_result: false) 
       current_user.current_section += 1
       current_user.save

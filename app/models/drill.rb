@@ -11,6 +11,6 @@ class Drill < ActiveRecord::Base
   end
 
   def next(current_user)
-    Drill.current_section_drills(section_no).not_clear(current_user).find_by(exeid: exeid + 1).presence || Drill.current_section_drills(section_no).not_clear(current_user).first
+    Drill.current_section_drills(section_no).not_clear(current_user).find_by('exeid > ?', exeid).presence || Drill.current_section_drills(section_no).not_clear(current_user).first
   end
 end
