@@ -27,14 +27,14 @@ class DrillsController < ApplicationController
   end
 
   def next
-    if Progress.joins(:drill).where('drills.section_no = ?', current_user.current_section).where(current_section_result: false).empty?
+    if current_user.progresses.joins(:drill).where('drills.section_no = ?', current_user.current_section).where(current_section_result: false).empty?
       ligger.info 'section clear'
-      Progress.refresh 
+      current_user.progresses.update_all(current_section_result: false) 
       current_user.current_section += 1
       current_user.save
       @drill = Drill.current_section_drills(current_user.current_section).first
     else
-      @drill = @drill.next
+      @drill = @drill.next current_user
     end
     set_progress
     @action = "question"
@@ -54,12 +54,12 @@ class DrillsController < ApplicationController
     if id = params[:drill_id]
       @drill = Drill.find_by(exeid: id)
     else
-      @drill = Drill.current_section_drills(current_user.current_section).not_clear.first
+      @drill = Drill.current_section_drills(current_user.current_section).not_clear(current_user).first
     end
   end
 
   def set_progress
-    if Progress.joins(:drill).where('drills.section_no = ?', current_user.current_section).empty?
+    if current_user.progresses.joins(:drill).where('drills.section_no = ?', current_user.current_section).empty?
       Drill.current_section_drills(current_user.current_section).each do |drill|
         current_user.progresses.create(drill: drill)
       end
