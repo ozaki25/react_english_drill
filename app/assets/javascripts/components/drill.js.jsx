@@ -4,7 +4,8 @@ this.EnglishDrill = React.createClass({
       drill: this.props.drill,
       progress: this.props.progress,
       action: this.props.action,
-      user: this.props.user
+      user: this.props.user,
+      cleared: this.props.cleared
     };
   },
   handleAnswerSubmit: function(value) {
@@ -18,7 +19,7 @@ this.EnglishDrill = React.createClass({
       type: 'POST',
       data: { answer: answer, current_action: this.state.action }
     }).done(function(data) {
-      _this.setState({ progress: data.progress, action: data.action, answer: answer });
+      _this.setState({ progress: data.progress, action: data.action, answer: answer, cleared: data.cleared });
       console.log("ajax done, action : " + _this.state.action);
     });
   },
@@ -45,7 +46,7 @@ this.EnglishDrill = React.createClass({
     <Header user={this.state.user} />
     <Title />
     <hr />
-    <ProgressInfo drill={this.state.drill} progress={this.state.progress} />
+    <ProgressInfo drill={this.state.drill} progress={this.state.progress} cleared={this.state.cleared} />
     <Japanese drill={this.state.drill} />
     <English action={this.state.action} drill={this.state.drill} answer={this.state.answer} onAnswerSubmit={this.handleAnswerSubmit} toNext={this.toNextDrill} />
   </div>
@@ -83,6 +84,7 @@ this.ProgressInfo = React.createClass({
     var sectionNo = this.props.drill.section_no;
     var answerCount = this.props.progress.answer_count;
     var clearCount = this.props.progress.clear_count;
+    var cleared = this.props.cleared;
     return(
 <div className="row">
   <div className="col-md-6">
@@ -106,7 +108,7 @@ this.ProgressInfo = React.createClass({
   <div className="col-md-2">
     <div className="counter-block lastfive">
       <div className="counter-text">Last</div>
-      <div className="counter-number">3</div>
+      <div className="counter-number">{cleared}</div>
       <div className="counter-text">to clear this section.</div>
     </div>
   </div>

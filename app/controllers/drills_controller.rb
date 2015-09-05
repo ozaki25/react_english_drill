@@ -7,6 +7,7 @@ class DrillsController < ApplicationController
 
   def show
     @action = "question"
+    @cleared = current_user.progresses.with_section(current_user.drill.section_no).clear.count
   end
 
   def check
@@ -20,7 +21,8 @@ class DrillsController < ApplicationController
       @action = "incorrect"
       @progress.save if @current_action == 'question'
     end
-    render json: { progress: @progress, action: @action }
+    @cleared = current_user.progresses.with_section(current_user.drill.section_no).clear.count
+    render json: { progress: @progress, action: @action, cleared: @cleared }
   end
 
   def next
