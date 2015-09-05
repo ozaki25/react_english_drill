@@ -1,4 +1,4 @@
-class ChangeClearToProgress < ActiveRecord::Migration
+class ChangeClearToProgresses < ActiveRecord::Migration
   def change
     rename_column :progresses, :count, :answer_count
     rename_column :progresses, :clear, :clear_count
