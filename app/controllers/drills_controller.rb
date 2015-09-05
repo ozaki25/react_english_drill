@@ -2,8 +2,7 @@ class DrillsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_drill, only: %i(show check next)
   before_action :set_progress, only: %i(show check)
-  before_action :answer_params, only: :check
-  before_action :current_action_params, only: :check
+  before_action :set_current_action, only: :check
   before_action :add_answer_count, only: :check
 
   def show
@@ -11,67 +10,48 @@ class DrillsController < ApplicationController
   end
 
   def check
-    if @drill.check(@answer)
+    if @drill.check(params[:answer])
       @action = "correct"
-      if @current_action == 'question'
-        @progress.clear_count += 1
-        @progress.current_section_result = true
-        @progress.save
-      end
+      @progress.drill_clear if @current_action == 'question'
+      @progress.save
+      current_user.update(drill: current_user.next_drill)
+      current_user.progresses.refresh if current_user.section_clear?
     else
       @action = "incorrect"
+      @progress.save if @current_action == 'question'
     end
-    logger.info "answer: #{@answer}"
-    logger.info "result : #{@action.to_s}"
-    render json: {progress: @progress, action: @action}
+    render json: { progress: @progress, action: @action }
   end
 
   def next
-    if current_user.progresses.joins(:drill).where('drills.section_no = ?', current_user.current_section).where(current_section_result: false).empty?
-      logger.info 'section clear'
-      current_user.progresses.update_all(current_section_result: false) 
-      current_user.current_section += 1
-      current_user.save
-      @drill = Drill.current_section_drills(current_user.current_section).first
-    else
-      @drill = @drill.next current_user
-    end
+    @drill = current_user.drill
     set_progress
     @action = "question"
-    render json: {drill: @drill, progress: @progress, action: @action}
+    render json: { drill: @drill, progress: @progress, action: @action }
   end
   
   private
-  def answer_params
-    @answer = params[:answer]
-  end
-
-  def current_action_params
-    @current_action = params[:current_action]
-  end
-
   def set_drill
-    if id = params[:drill_id]
-      @drill = Drill.find_by(exeid: id)
-    else
-      @drill = Drill.current_section_drills(current_user.current_section).not_clear(current_user).first
-    end
+    @drill = if id = params[:drill_id]
+               Drill.find_by(exeid: id)
+             else
+               unless current_user.drill
+                 current_user.set_default_drill
+                 current_user.save
+               end
+               current_user.drill
+             end
   end
 
   def set_progress
-    if current_user.progresses.joins(:drill).where('drills.section_no = ?', current_user.current_section).empty?
-      Drill.current_section_drills(current_user.current_section).each do |drill|
-        current_user.progresses.create(drill: drill)
-      end
-    end
-    @progress = current_user.progresses.find_by(drill: @drill)
+    @progress = current_user.progresses.find_or_create_by(drill: @drill)
+  end
+
+  def set_current_action
+    @current_action = params[:current_action]
   end
 
   def add_answer_count
-    logger.info "current_action : #{@current_action}"
-    if @current_action == "question"
-      @progress.answer_count += 1
-      @progress.save
-    end
+    @progress.answer_count += 1 if @current_action == "question"
   end
 end

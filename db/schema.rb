@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150901052651) do
+ActiveRecord::Schema.define(version: 20150905140050) do
 
   create_table "drills", force: :cascade do |t|
     t.string   "japanese",   limit: 255
@@ -23,37 +23,36 @@ ActiveRecord::Schema.define(version: 20150901052651) do
   end
 
   create_table "progresses", force: :cascade do |t|
-    t.integer  "drill_id",               limit: 4
-    t.integer  "user_id",                limit: 4
-    t.integer  "answer_count",           limit: 4, default: 0
-    t.integer  "clear_count",            limit: 4, default: 0,     null: false
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
-    t.boolean  "current_section_result", limit: 1, default: false, null: false
+    t.integer  "drill_id",       limit: 4
+    t.integer  "user_id",        limit: 4
+    t.integer  "answer_count",   limit: 4, default: 0
+    t.integer  "clear_count",    limit: 4, default: 0,     null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.boolean  "current_result", limit: 1, default: false, null: false
   end
 
   add_index "progresses", ["drill_id"], name: "index_progresses_on_drill_id", using: :btree
   add_index "progresses", ["user_id"], name: "index_progresses_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255, default: "", null: false
-    t.string   "encrypted_password",     limit: 255, default: "", null: false
-    t.string   "reset_password_token",   limit: 255
-    t.datetime "reset_password_sent_at"
+    t.string   "email",               limit: 255, default: "", null: false
+    t.string   "encrypted_password",  limit: 255, default: "", null: false
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0,  null: false
+    t.integer  "sign_in_count",       limit: 4,   default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
-    t.integer  "current_section",        limit: 4,   default: 0
+    t.string   "current_sign_in_ip",  limit: 255
+    t.string   "last_sign_in_ip",     limit: 255
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.integer  "drill_id",            limit: 4
   end
 
+  add_index "users", ["drill_id"], name: "index_users_on_drill_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   add_foreign_key "progresses", "drills"
   add_foreign_key "progresses", "users"
+  add_foreign_key "users", "drills"
 end
