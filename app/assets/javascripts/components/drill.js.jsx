@@ -20,7 +20,6 @@ this.EnglishDrill = React.createClass({
       data: { answer: answer, current_action: this.state.action }
     }).done(function(data) {
       _this.setState({ progress: data.progress, action: data.action, answer: answer, cleared: data.cleared });
-      console.log("ajax done, action : " + _this.state.action);
     });
   },
   toNextDrill: function() {
@@ -33,13 +32,9 @@ this.EnglishDrill = React.createClass({
       type: 'GET',
     }).done(function(data) {
       _this.setState({ drill: data.drill, progress: data.progress, action: data.action });
-      console.log("ajax done, next id  : " + _this.state.drill.exeid);
-      console.log("ajax done, action : " + _this.state.action);
     });
   },
   render: function() {
-    console.log(this.state.drill);
-    console.log(this.state.progress);
     return(
 <body>
   <div className="container">
@@ -139,7 +134,6 @@ this.English = React.createClass({
     };
   },
   render: function() {
-    console.log("current action : " + this.props.action);
     return <div>{this.action()}</div>
   }
 });
@@ -149,11 +143,9 @@ this.Question = React.createClass({
     e.preventDefault()
     var answer = this.refs.answer.getDOMNode().value.trim()
     if(!answer) return;
-    console.log(answer);
     this.props.onAnswerSubmit({answer})
   },
   render: function() {
-    console.log("action : Question");
     return(
 <form onSubmit={this.handleSubmit}>
   <div className="sentence-block form-group">
@@ -168,7 +160,6 @@ this.Question = React.createClass({
 
 this.Correct = React.createClass({
   render: function() {
-    console.log("action : Correct");
     var answer = this.props.answer;
     return(
 <div>
@@ -190,15 +181,12 @@ this.Incorrect = React.createClass({
     e.preventDefault();
     var answer = this.refs.answer.getDOMNode().value.trim();
     if(!answer) return;
-    console.log(answer);
     React.findDOMNode(this.refs.answer).value = "";
     this.props.onAnswerSubmit({answer})
   },
   render: function() {
-    console.log("action : Incorrect");
     var english = this.props.drill.english;
     var answer = this.props.answer;
-    console.log("answer : " + answer);
     return(
 <form onSubmit={this.handleSubmit}>
   <div className="sentence-block">
