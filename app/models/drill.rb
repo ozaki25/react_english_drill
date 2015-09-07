@@ -5,6 +5,6 @@ class Drill < ActiveRecord::Base
   scope :with_section, -> section { where(section_no: section) }
 
   def check(answer)
-    self.english == answer
+    self.english.delete(".,!\"?' ").downcase == answer.delete(".,!\"?' ").downcase
   end
 end
